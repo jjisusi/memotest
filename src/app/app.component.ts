@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MemoserviceService } from './services/memoservice.service';
+import { Carta } from './carta';
+import { CartaComponent } from './carta/carta.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,40 +10,42 @@ import { MemoserviceService } from './services/memoservice.service';
 export class AppComponent {
   title = 'memotest';
   numParejas = 0;
+  numIntentos =0;
+  cartas : Carta[];
+  seleccion1 : CartaComponent;
+  seleccion2 : CartaComponent;
 
   constructor(private memoService : MemoserviceService) {
+    this.cartas = this.memoService.getCartas();
   }
-  imagenes = this.memoService.imagenes;
+  
 
-  muestraAlerta(numImage){
-    window.alert(numImage);
-  }
-
-  actualizaEstado(numImage){
-    if(this.estado.length == 2){
-      this.estado = [];
-    } else {
-      // Truco del almendruco. Debido a que angular en el evento onChanges
-      // no detecta cambios que se produzcan en un array (añadir o quitar elementos),
-      // hay que reasignar el array completo.
-      // Por eso se crea una copia temporal del array de estados y se
-      // reasigna. 
-      let _estado = JSON.parse(JSON.stringify(this.estado))
-      this.estado = _estado
+  actualizaEstado(carta:CartaComponent){
+    if(this.seleccion1==null)
+      this.seleccion1 = carta;
+    else if(this.seleccion2 == null)
+          this.seleccion2 = carta;
+    if(this.seleccion2 != null){
+      if(this.seleccion1.carta.url  !== this.seleccion2.carta.url){
+        setTimeout(() => {
+          this.seleccion1.reset();          
+          this.seleccion1=null;
+          this.seleccion2.reset();
+          this.seleccion2 = null;   
+        }, 500);    
+          this.numIntentos ++;
+      }else{
+        this.numParejas ++;
+        this.seleccion1=null;
+        this.seleccion2=null;
+      }
     }
-
-    this.estado.push(numImage);
-  }
-
-  resolve(num){
-    this.numParejas ++;
   }
 
   juegoResuelto(){
     return this.numParejas == this.memoService.imagenes.length;
   }
-  cartas = this.memoService.getRandomDistribution();
-  estado = [];
+
 
   ngOnInit() {
   }

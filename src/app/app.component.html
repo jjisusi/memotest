@@ -1,7 +1,8 @@
 
-  <app-carta *ngFor="let number of cartas" [numImage]="number" [estado]="estado" 
-  (onChangeState)="actualizaEstado($event)"
-  (onResolve)="resolve($event)"
-  class="col-md-3"></app-carta>
+    <p>Número de parejas resultas : {{numParejas}}</p>
+    <p>Número de intentos : {{numIntentos}}</p>
+    <h2 *ngIf="juegoResuelto()">Enhorabuena lo has conseguido</h2>
 
-  <h2 *ngIf="juegoResuelto()">Enhorabuena lo has conseguido</h2>
+  <app-carta *ngFor="let carta of cartas" [carta]="carta" 
+  (onChangeState)="actualizaEstado($event)"></app-carta>
+

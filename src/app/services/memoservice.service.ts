@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Carta } from '../carta';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,10 @@ export class MemoserviceService {
     }
     console.log(unorderedList);
     return unorderedList
+  }
+
+  getCartas(): Carta[]{
+    var self = this;
+    return this.getRandomDistribution().map(x=> new Carta(self.imagenes[x]));
   }
 }

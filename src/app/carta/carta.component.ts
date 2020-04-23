@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MemoserviceService } from '../services/memoservice.service';
+import { Carta } from '../carta';
 
 
 
@@ -15,10 +16,11 @@ export class CartaComponent implements OnInit {
   // La imagen que se muestra
   @Input('numImage') numImage: number;
   @Input('estado') estado: number[];
-  @Output('onChangeState') onChangeState = new EventEmitter<number>();
+  @Output('onChangeState') onChangeState = new EventEmitter<CartaComponent>();
   @Output('onResolve') onResolve = new EventEmitter<number>();
   volteada = false;
   resolved = false;
+  @Input() carta : Carta;
 
   
 
@@ -34,32 +36,20 @@ export class CartaComponent implements OnInit {
     this.urlImage = this.urlImageBack;
   }
 
-  ngOnChanges() {
-    console.log(this.estado);
-    if(this.resolved) return;
-
-    if (this.estado.length == 2){
-      if(this.estado[0] == this.estado[1] && this.estado[0] == this.numImage){
-        this.resolved = true;
-        this.onResolve.emit(1);
-      }else if(this.estado[0] != this.estado[1] && (this.numImage == this.estado[0] || this.numImage == this.estado[1]) ){
-        setTimeout(() => {
-          this.urlImage = this.urlImageBack;
-          this.volteada = false;
-        }, 500);  
-      }
-    } 
-  }
 
   flip() {
     // Cuando el usuario pica en la carta hay que darle la vuelta, es decir,
     // mostrar la imagen que le corresponde al índice `n`
     if(!this.volteada){
-      this.urlImage = this.memoService.imagenes[this.numImage];
-      this.onChangeState.emit(this.numImage);
+      this.urlImage = this.carta.url;
+      this.onChangeState.emit(this);
       this.volteada = true;
     }
 
+  }
+  public reset(){
+    this.volteada = false;
+    this.urlImage = this.urlImageBack;
   }
 
 }
