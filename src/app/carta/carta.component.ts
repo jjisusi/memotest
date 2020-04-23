@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MemoserviceService } from '../services/memoservice.service';
 import { Carta } from '../carta';
 
 
@@ -11,25 +10,13 @@ import { Carta } from '../carta';
 })
 
 export class CartaComponent implements OnInit {
-
-  
-  // La imagen que se muestra
-  @Input('numImage') numImage: number;
-  @Input('estado') estado: number[];
-  @Output('onChangeState') onChangeState = new EventEmitter<CartaComponent>();
-  @Output('onResolve') onResolve = new EventEmitter<number>();
-  volteada = false;
-  resolved = false;
   @Input() carta : Carta;
-
-  
-
+  @Output('onChangeState') onChangeState = new EventEmitter<CartaComponent>();
   urlImage : string;
-
   // La imagen de atrás, común a todas las "cartas"
   urlImageBack = "https://image.freepik.com/vector-gratis/confeti-dorado-diseno-festivo_53876-67683.jpg";
 
-  constructor(private memoService : MemoserviceService) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -40,15 +27,15 @@ export class CartaComponent implements OnInit {
   flip() {
     // Cuando el usuario pica en la carta hay que darle la vuelta, es decir,
     // mostrar la imagen que le corresponde al índice `n`
-    if(!this.volteada){
+    if(!this.carta.volteada){
       this.urlImage = this.carta.url;
       this.onChangeState.emit(this);
-      this.volteada = true;
+      this.carta.volteada = true;
     }
 
   }
   public reset(){
-    this.volteada = false;
+    this.carta.volteada = false;
     this.urlImage = this.urlImageBack;
   }
 
